@@ -59,6 +59,9 @@ class Menu {
      * @return true so that the program continues to run
      */
     static boolean employeeLogin() {
+        // I'm trying to figure out how to implement login, was first thinking text files might work
+        // now thinking I probably need to use a database, but I'm not sure how to implement a database in java
+        
         System.out.println("You've reached the employee login screen");
         System.out.print("Please Input your username: ");
         String uName = scanner.nextLine();
