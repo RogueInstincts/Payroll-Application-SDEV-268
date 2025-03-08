@@ -3,19 +3,20 @@ import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLOutput;
+import java.util.Objects;
 import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
 
 class Menu {
-    static Scanner scanner = new Scanner(System.in);
-
     /**
      * This method displays the first menu, which asks the user to decide where to go next
      *
      * @return The choice of which screen to navigate to
      */
     static int display() {
+        Scanner scanner = new Scanner(System.in);
         int response = 0;
 
         System.out.println("""
@@ -59,14 +60,23 @@ class Menu {
      * @return true so that the program continues to run
      */
     static boolean employeeLogin() {
-        // I'm trying to figure out how to implement login, was first thinking text files might work
-        // now thinking I probably need to use a database, but I'm not sure how to implement a database in java
-        
-        System.out.println("You've reached the employee login screen");
+        Scanner scanner = new Scanner(System.in);
+        // It took me too long to realize that I probably need to use a database instead of a .txt file,
+        // and I'm not sure how to implement a database in java
+
+        System.out.println("\nYou've reached the employee login screen");
         System.out.print("Please Input your username: ");
         String uName = scanner.nextLine();
-        String savedHash = file.search(uName);
-        return true;
+        scanner = new Scanner(System.in);
+        System.out.print("Please Input your password: ");
+        String passAttempt = scanner.nextLine();
+        if (MD5.getMd5(passAttempt).equals(file.search(uName))) {
+            System.out.println("\nPassword Accepted");
+            return employeePayroll(uName);
+        } else {
+            System.out.println("Invalid username or password");
+            return true;
+        }
     }
 
     /**
@@ -75,13 +85,24 @@ class Menu {
      * @return true so that the program continues to run
      */
     static boolean adminLogin() {
-        System.out.println("You've reached the admin login screen placeholder");
+        System.out.println("\nYou've reached the admin login screen placeholder");
         return true;
+    }
+
+    /**
+     * This method acts as a placeholder for the screen the user will see after logging in
+     *
+     * @param user The user that is logged in
+     * @return false to terminate the program - to differentiate better between payroll placeholder and main menu
+     */
+    static boolean employeePayroll(String user) {
+        System.out.println("\nYou've reached the payroll page placeholder for the user \"" + user + "\"\n");
+        return false;
     }
 }
 
 class file {
-    static String filename = "users.txt";
+    static String filename = "src/users.txt";
 
     /**
      * This method adds the given data to the file
@@ -139,7 +160,6 @@ class file {
                 String data = myReader.nextLine();
                 if (user.equals(data)) {
                     hash = myReader.nextLine();
-                    myReader.close();
                 }
             }
             myReader.close();
@@ -183,8 +203,6 @@ class MD5 {
 public class Main {
     public static void main(String[] args) {
         boolean run = true;
-
-        System.out.println(file.read());
 
         while (run) {
             run = Menu.navigate(Menu.display());
